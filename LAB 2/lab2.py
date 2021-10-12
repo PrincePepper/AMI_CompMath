@@ -28,20 +28,25 @@ for i in range(0, 11):
 print(*mass_function_x)
 
 # ---------------------------------------------------------------------------
-
+# находим ближайщее значение к нашему x*, а затем xᵢ₊₁ и xᵢ₋₁
 x_i = sorted(mass_function_x, key=lambda x: abs(x_star - x))[0]
 x_i_next = sorted(mass_function_x, key=lambda x: abs(x_star - x))[1]
 x_i_back = sorted(mass_function_x, key=lambda x: abs(x_star - x))[2]
 print("xi:", x_i, " ", "xi+1:", " ", x_i_next, "xi-1:", x_i_back)
 
 # ---------------------------------------------------------------------------
-
+# По интерполяционной формуле Лагранжа первого порядка вычисляем полином
 # L1(x*) = f(xᵢ) · (x* − xᵢ₊₁)/(xi − xᵢ₊₁) + f(xᵢ₊₁) · (x* − xᵢ)/(xᵢ₊₁ − xᵢ).
-L1 = my_function(x_i) * (x_star - x_i_next) / (x_i - x_i_next) + my_function(x_i_next) * (x_star - x_i) / (
-        x_i_next - x_i)
+L1 = my_function(x_i) * (x_star - x_i_next) / (x_i - x_i_next) + my_function(x_i_next) * (
+        x_star - x_i) / (
+             x_i_next - x_i)
 print("ответ по формуле Лагранжа первого порядка L_1(x*): ", L1)
 
 # ---------------------------------------------------------------------------
+# С помощью формулы остаточного члена интерполяционной формулы Лагранжа первого порядка на
+# отрезке [xᵢ, xᵢ₊₁] оценить минимальное и максимальное значения f′′(x),
+# а затем минимальное и максимальное значения остаточного члена R1(x).
+
 # ω2(x) = (x−xᵢ)·(x−xᵢ₊₁)
 w2 = (x_star - x_i) * (x_star - x_i_next)
 print("ω2(x): ", w2)
@@ -63,13 +68,11 @@ print("R1(x*) = L1(x*) − f(x*):", "YES" if (abs(Rx - (L1 - my_function(x_star)
 
 # ------------------------------------------------------------------
 
-L2 = my_function(x_i_back) * (x_star - x_i) * (x_star - x_i_next) / (x_i_back - x_i) / (
-        x_i_back - x_i_next) + my_function(x_i) * (
-             x_star - x_i_back) * (
-             x_star - x_i_next) / (
-             x_i - x_i_back) / (x_i - x_i_next) + my_function(x_i_next) * (x_star - x_i) * (x_star - x_i_back) / (
-             x_i_next - x_i_back) / (
-             x_i_next - x_i)
+L2 = (my_function(x_i_back) * (x_star - x_i) * (x_star - x_i_next)) / \
+     (x_i_back - x_i) / (x_i_back - x_i_next) + \
+     (my_function(x_i) * (x_star - x_i_back) * (x_star - x_i_next)) / \
+     (x_i - x_i_back) / (x_i - x_i_next) + my_function(x_i_next) * \
+     (x_star - x_i) * (x_star - x_i_back) / (x_i_next - x_i_back) / (x_i_next - x_i)
 print("L_2(x*): ", L2)
 
 # ω3(x) = (x−xᵢ₋₁)(x−xᵢ)(x−xᵢ₊₁)
@@ -84,7 +87,8 @@ R2max = max(R3, R4)
 print("R2_max: ", Rmax, " ", "R2_min: ", Rmin)
 
 print("min R2 < R2(x*) < max R2: ", "YES" if (R2min < R2x < R2max) else "NO")
-print("R1(x*) = L2(x*) − f(x*):", "YES" if (abs(R2x - (L2 - my_function(x_star))) <= 0.001) else "NO")
+print("R1(x*) = L2(x*) − f(x*):",
+      "YES" if (abs(R2x - (L2 - my_function(x_star))) <= 0.001) else "NO")
 
 # ------------------------------------------------------------------
 
