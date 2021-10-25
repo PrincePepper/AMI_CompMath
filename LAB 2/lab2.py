@@ -96,10 +96,11 @@ next = my_function(x_i_next)
 now = my_function(x_i)
 forward = my_function(x_i_back)
 
-print((next - now) - (now - forward))
+
 f_1 = (now - next) / (x_i - x_i_next)
 f_2 = (forward - now) / (x_i_back - x_i)
 f_3 = (f_1 - f_2) / (x_i_next - x_i_back)
+# print(f_1,f_2,f_3)
 
 newton_1 = now + f_1 * (x_star - x_i)
 newton_2 = forward + f_2 * (x_star - x_i_back) + f_3 * (x_star - x_i_back) * (x_star - x_i)

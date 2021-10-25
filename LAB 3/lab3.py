@@ -1,107 +1,122 @@
 import math
 
-import numpy as np
 
-
-# https://coderoad.ru/14823891/%D0%98%D0%BD%D1%82%D0%B5%D1%80%D0%BF%D0%BE%D0%BB%D0%B8%D1%80%D1%83%D1%8E%D1%89%D0%B8%D0%B9-%D0%BF%D0%BE%D0%BB%D0%B8%D0%BD%D0%BE%D0%BC-%D0%9D%D1%8C%D1%8E%D1%82%D0%BE%D0%BD%D0%B0-python
-def coef(x, y):
-    '''x : array of data points
-       y : array of f(x)  '''
-    x.astype(float)
-    y.astype(float)
-    n = len(x)
-    a = []
-    for i in range(n):
-        a.append(y[i])
-
-    for j in range(1, n):
-
-        for i in range(n - 1, j - 1, -1):
-            a[i] = float(a[i] - a[i - 1]) / float(x[i] - x[i - j])
-
-    return np.array(a)  # return an array of coefficient
-
-
-def Eval(a, x, r):
-    ''' a : array returned by function coef()
-       x : array of data points
-       r : the node to interpolate at  '''
-
-    x.astype(float)
-    n = len(a) - 1
-    temp = a[n] + (r - x[n])
-    for i in range(n - 1, -1, -1):
-        temp = temp * (r - x[i]) + a[i]
-    return temp  # return the y_value interpolation
-
-
-# 1-я формула Ньютона
-def first_newton_f():
-    return
-
-
-# 2-я формула Ньютона
-def second_newton_f():
-    pass
-
-
-# 1-я формула Гаусса
-def first_gauss_f():
-    pass
-
-
-# 2-я формула Гаусса
-def second_gauss_f():
-    pass
-
-
-# Формула Стирлинга
-def stirling_f():
-    pass
-
-
-# Формула Бесселя
-def bessel_f():
-    pass
-
-
-def my_function(x):
+def func(x):
     return x ** 2 + math.log10(x)
 
 
+def omega11(x):
+    return (x - xx[0]) * (x - xx[1]) * (x - xx[2]) * (x - xx[3]) * (x - xx[4]) * (x - xx[5]) * \
+           (x - xx[6]) * (x - xx[7]) * (x - xx[8]) * (x - xx[9]) * (x - xx[10])
+
+
+def y11(x):
+    return 3628800 / (math.log10(10) * x ** 11)
+
+
+def R(point, x):
+    return abs(y11(point) * omega11(x) / (2 * 3 * 4 * 5 * 6 * 7 * 8 * 9 * 10 * 11))
+
+
+def N1(t):
+    return y[0][0] + \
+           t * y[1][0] + \
+           t * (t - 1) * y[2][0] / 2 + \
+           t * (t - 1) * (t - 2) * y[3][0] / 6 + \
+           t * (t - 1) * (t - 2) * (t - 3) * y[4][0] / 24 + \
+           (y[5][0] * t * (t - 1) * (t - 2) * (t - 3) * (t - 4)) / 120 + \
+           (y[6][0] * t * (t - 1) * (t - 2) * (t - 3) * (t - 4) * (t - 5)) / 720 + \
+           (y[7][0] * t * (t - 1) * (t - 2) * (t - 3) * (t - 4) * (t - 5) * (t - 6)) / 5040 + \
+           (y[8][0] * t * (t - 1) * (t - 2) * (t - 3) * (t - 4) * (t - 5) * (t - 6) * (t - 7)) / \
+           40320 + \
+           (y[9][0] * t * (t - 1) * (t - 2) * (t - 3) * (t - 4) * (t - 5) * (t - 6) * (t - 7) *
+            (t - 8)) / 362880 + \
+           (y[10][0] * t * (t - 1) * (t - 2) * (t - 3) * (t - 4) * (t - 5) * (t - 6) * (t - 7) *
+            (t - 8) * (t - 9)) / 3628800
+
+
+def N2(t):
+    return y[0][-1] + \
+           t * y[1][-1] + \
+           t * (t + 1) * y[2][-1] / 2 + \
+           t * (t + 1) * (t + 2) * y[3][-1] / 6 + \
+           t * (t + 1) * (t + 2) * (t + 3) * y[4][-1] / 24 + \
+           (y[5][-1] * t * (t + 1) * (t + 2) * (t + 3) * (t + 4)) / 120 + \
+           (y[6][-1] * t * (t + 1) * (t + 2) * (t + 3) * (t + 4) * (t + 5)) / 720 + \
+           (y[7][-1] * t * (t + 1) * (t + 2) * (t + 3) * (t + 4) * (t + 5) * (t + 6)) / 5040 + \
+           (y[8][-1] * t * (t + 1) * (t + 2) * (t + 3) * (t + 4) * (t + 5) * (t + 6) * (t + 7)) / \
+           40320 + \
+           (y[9][-1] * t * (t + 1) * (t + 2) * (t + 3) * (t + 4) * (t + 5) * (t + 6) * (t + 7) *
+            (t + 8)) / 362880 + \
+           (y[10][-1] * t * (t + 1) * (t + 2) * (t + 3) * (t + 4) * (t + 5) * (t + 6) * (t + 7) *
+            (t + 8) * (t + 9)) / 3628800
+
+
+def G2(t):
+    return y[0][5] + t * y[1][(len(y[1]) - 1) // 2] + t * (t + 1) * y[2][
+        (len(y[2]) - 1) // 2] / 2 + t * (t + 1) * (t - 1) * y[3][
+               (len(y[3]) - 1) // 2] / 6 + t * (t + 1) * (t ** 2 - 1) * y[4][
+               (len(y[4]) - 1) // 2] / 24
+
+
+# ---------------------------------------------------------------------------
+
 a = 0.4  # левая граница
 b = 0.9  # правая граница
-h = (b - a) / 10  # шаг
-x_star = 0.53  #
+x2 = 0.43
+x3 = 0.86
+x4 = 0.67
 
-mass_function_x = []
-for i in range(0, 11):
-    mass_function_x.append(a + i * h)
-print(*mass_function_x)
-
-# ---------------------------------------------------------------------------
-# находим ближайщее значение к нашему x, а затем xᵢ₊₁ и xᵢ₋₁
-x_i = sorted(mass_function_x, key=lambda x: abs(x_star - x))[0]
-x_i_next = sorted(mass_function_x, key=lambda x: abs(x_star - x))[1]
-x_i_back = sorted(mass_function_x, key=lambda x: abs(x_star - x))[2]
-print("xi:", x_i, " ", "xi+1:", " ", x_i_next, "xi-1:", x_i_back)
-
+h = (b - a) / 10
 # ---------------------------------------------------------------------------
 
-next = my_function(x_i_next)
-now = my_function(x_i)
-forward = my_function(x_i_back)
-y = np.array([next, now, forward])
-x = np.array([x_i_next, x_i, x_i_back])
+xx = [a + i * h for i in range(11)]
 
-aaa = coef(x, y)
-print(aaa)
+n = len(xx)
+y = [[] for j in range(n)]
 
-next = my_function(x_i_next)
-now = my_function(x_i)
-forward = my_function(x_i_back)
+for i in range(n):
+    y[0].append(func(xx[i]))
+for i in range(1, n):
+    for j in range(n - i):
+        y[i].append(y[i - 1][j + 1] - y[i - 1][j])
 
-f_1 = (now - next) / (x_i - x_i_next)
-f_2 = (forward - now) / (x_i_back - x_i)
-f_3 = (f_1 - f_2) / (x_i_next - x_i_back)
-print(f_1, f_2, f_3)
+t2 = (x2 - a) / h
+t3 = (x3 - b) / h
+t4 = (x4 - 0.65) / h
+# ---------------------------------------------------------------------------
+close_x2 = min([(abs(xx[i] - x2), j) for i, j in enumerate(range(0, 10))])[1]
+print("Ньютон 1 для x**: ", 0 <= close_x2 <= 1)
+
+close_x3 = min([(abs(xx[i] - x3), j) for i, j in enumerate(range(0, 10))])[1]
+print("Ньютон 2 для x***: ", 9 <= close_x3 <= 10)
+
+close_x4 = min([(abs(xx[i] - x4), j) for i, j in enumerate(range(0, 10))])[1]
+print(close_x4)
+
+print("f(x**): ", func(x2), "Ньютон 1: ", N1(t2), "f(x***): ", "Ньютон 2: ", func(x3), N2(t3),
+      "f(x***): ", func(x4), "Гауса 2: ", G2(t4))
+# ---------------------------------------------------------------------------
+
+R2_1 = R(a, x2)
+R2_2 = R(b, x2)
+R2min = min(R2_1, R2_2)
+R2max = max(R2_1, R2_2)
+R2x = N1(t2) - func(x2)
+print("min R2 < R2(x**) < max R2: ", "YES" if (R2min < R2x < R2max) else "NO")
+# ---------------------------------------------------------------------------
+
+R3_1 = R(a, x3)
+R3_2 = R(b, x3)
+R3min = min(R3_1, R3_2)
+R3max = max(R3_1, R3_2)
+R3x = N2(t3) - func(x3)
+print("min R3 < R3(x***) < max R3: ", "YES" if (R3min < R3x < R3max) else "NO")
+# ---------------------------------------------------------------------------
+
+R4_1 = R(a, x4)
+R4_2 = R(b, x4)
+R4min = min(R4_1, R4_2)
+R4max = max(R4_1, R4_2)
+R4x = G2(t4) - func(x4)
+print("min R4 < R4(x****) < max R4: ", "YES" if (R3min < R3x < R3max) else "NO")
