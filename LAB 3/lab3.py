@@ -15,7 +15,7 @@ def y11(x):
 
 
 def R(point, x):
-    return abs(y11(point) * omega11(x) / (2 * 3 * 4 * 5 * 6 * 7 * 8 * 9 * 10 * 11))
+    return abs(y11(point) * omega11(x) / (2 * 3 * 4 * 5 * 6 * 7 * 8 * 9 * 10 * 11 * 12))
 
 
 def N1(t):
@@ -52,7 +52,7 @@ def N2(t):
             (t + 8) * (t + 9)) / 3628800
 
 
-def G2(t):
+def G1(t):
     return y[0][5] + t * y[1][(len(y[1]) - 1) // 2] + t * (t + 1) * y[2][
         (len(y[2]) - 1) // 2] / 2 + t * (t + 1) * (t - 1) * y[3][
                (len(y[3]) - 1) // 2] / 6 + t * (t + 1) * (t ** 2 - 1) * y[4][
@@ -81,6 +81,9 @@ for i in range(1, n):
     for j in range(n - i):
         y[i].append(y[i - 1][j + 1] - y[i - 1][j])
 
+for i in range(0, len(y[0])):
+    print(*y[i])
+    print("----------------------")
 t2 = (x2 - a) / h
 t3 = (x3 - b) / h
 t4 = (x4 - 0.65) / h
@@ -92,17 +95,17 @@ close_x3 = min([(abs(xx[i] - x3), j) for i, j in enumerate(range(0, 10))])[1]
 print("Ньютон 2 для x***: ", 9 <= close_x3 <= 10)
 
 close_x4 = min([(abs(xx[i] - x4), j) for i, j in enumerate(range(0, 10))])[1]
-print(close_x4)
+print("Гаусса 1 для x****: ", 1 <= close_x4 <= 5.5)
 
-print("f(x**): ", func(x2), "Ньютон 1: ", N1(t2), "f(x***): ", "Ньютон 2: ", func(x3), N2(t3),
-      "f(x***): ", func(x4), "Гауса 2: ", G2(t4))
+print("f(x**): ", func(x2), "Ньютон 1: ", N1(t2), "f(x***): ", func(x3), "Ньютон 2: ", N2(t3),
+      "f(x***): ", func(x4), "Гаусcа 1: ", G1(t4))
 # ---------------------------------------------------------------------------
 
 R2_1 = R(a, x2)
 R2_2 = R(b, x2)
 R2min = min(R2_1, R2_2)
 R2max = max(R2_1, R2_2)
-R2x = N1(t2) - func(x2)
+R2x = abs(N1(t2) - func(x2))
 print("min R2 < R2(x**) < max R2: ", "YES" if (R2min < R2x < R2max) else "NO")
 # ---------------------------------------------------------------------------
 
@@ -116,7 +119,9 @@ print("min R3 < R3(x***) < max R3: ", "YES" if (R3min < R3x < R3max) else "NO")
 
 R4_1 = R(a, x4)
 R4_2 = R(b, x4)
+print(R4_1, R4_2)
 R4min = min(R4_1, R4_2)
 R4max = max(R4_1, R4_2)
-R4x = G2(t4) - func(x4)
+R4x = G1(t4) - func(x4)
+print(R4min, R4x, R4max)
 print("min R4 < R4(x****) < max R4: ", "YES" if (R3min < R3x < R3max) else "NO")
