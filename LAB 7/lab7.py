@@ -1,8 +1,10 @@
 import math
 
-
 # def solve_dir(x):
 #     return 2 * x + 1 / (math.log(10) * x)
+import matplotlib.pyplot as plt
+
+
 def solve_dir(x):
     return 2 - 1 / (math.log(10) * x ** 2)
 
@@ -81,10 +83,14 @@ m.reverse()
 # print(M)
 
 i = a
-integral = 0
 index = 0
-
+x = []
+mass = []
 while i < b:
-    print(solve_dir(i), div(i, m[index], m[index + 1], h))
+    mass.append(div(i, m[index], m[index + 1], h))
     index += 1
+    x.append(i + h)
     i += h
+
+plt.plot(x, mass)
+plt.show()
