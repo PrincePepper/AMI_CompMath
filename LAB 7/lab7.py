@@ -1,7 +1,5 @@
 import math
 
-# def solve_dir(x):
-#     return 2 * x + 1 / (math.log(10) * x)
 import matplotlib.pyplot as plt
 
 
@@ -25,72 +23,73 @@ def div(x, m_i, m_next, h):
 
 a = 0.4
 b = 0.9
-h = (b - a) / 10
-first = solve_dir(a)
-second = solve_dir(b)
-# print(first)
-# print(second)
-
-low = [0]
-main = [2]
-high = [1]
-result = [(6 / h) * ((solve(a + h) - solve(a)) / h - first)]
-
-i = a + h
-while i < b:
-    low.append(1 / 2)
-    main.append(2)
-    high.append(1 / 2)
-    result.append((3 / h) * (((solve(i + h) - solve(i)) - (solve(i) - solve(i - h))) / h))
-    i += h
-
-low.append(1)
-main.append(2)
-high.append(0)
-result.append((6 / h) * (second - (solve(b) - solve(b - h)) / h))
-
-print(low)
-print(main)
-print(high)
-print(result)
-
-alpha = [0]
-betta = [0]
-alpha.append(-high[0] / main[0])
-betta.append(result[0] / main[0])
-
 n = 11
-i = 1
+h = (b - a) / 10
+segment = [a + h * i for i in range(11)]
+gov = [solve(i) for i in segment]
 
-while i < n:
-    alpha.append(-high[i] / (main[i] + low[i] * alpha[i]))
-    betta.append((-low[i] * betta[i] + result[i]) / (main[i] + low[i] * alpha[i]))
-    i += 1
+# нижняя диагональ
+diag_1i = [0.5 if i != 9 else 1 for i in range(11 - 1)]
+diag_1i.insert(0, 0)
 
-# print(alpha)
-# print(betta)
+# главная диагональ
+diag_i = [2 for _ in range(11)]
 
-m = [(-low[n - 1] * betta[n - 1] + result[n - 1]) / (main[n - 1] + low[n - 1] * alpha[n - 1])]
-i = n - 1
-m_count = 0
+# верхняя диагональ
+diag_i1 = [0.5 if i != 0 else 1 for i in range(11 - 1)]
+diag_i1.append(0)
 
-while i != 0:
-    m.append(alpha[i] * m[m_count] + betta[i])
-    i -= 1
-    m_count += 1
+# вектор правой части
+resuilt = []
+for i in range(11):
+    if i == 0:
+        resuilt.append((3 / h) * (gov[i + 1] - gov[i]) - (h / 2) * solve_dir(segment[i]))
+    elif i == 10:
+        resuilt.append((h * solve_dir(segment[i]) / 2) + 3 * ((gov[i] - gov[i - 1]) / h))
+    else:
+        resuilt.append(30 * (gov[i + 1] - gov[i - 1]))
 
-m.reverse()
-# print(M)
 
-i = a
-index = 0
-x = []
-mass = []
-while i < b:
-    mass.append(div(i, m[index], m[index + 1], h))
-    index += 1
-    x.append(i + h)
-    i += h
+def solveMatrix(n, a, c, b, f):
+    m = 0
+    x = [0 for i in range(n)]
+    for i in range(1, n):
+        m = a[i] / c[i - 1]
+        c[i] = c[i] - m * b[i - 1]
+        f[i] = f[i] - m * f[i - 1]
 
-plt.plot(x, mass)
+    x[n - 1] = f[n - 1] / c[n - 1]
+    for i in range(n - 2, -1, -1):
+        x[i] = (f[i] - b[i] * x[i + 1]) / c[i]
+
+    return x
+
+
+# пример
+mi = solveMatrix(11, diag_1i, diag_i, diag_i1, resuilt)
+
+
+def S(x, i):
+    res = 0
+    a1 = 6 / h
+    a2 = (gov[i + 1] - gov[i]) / h
+    a3 = (mi[i + 1] + 2 * mi[i]) / 3
+    a4 = 12 * (x - segment[i]) / (h ** 2)
+    a5 = (mi[i + 1] + mi[i]) / 2
+    a6 = (gov[i + 1] - gov[i]) / h
+    res += a1 * (a2 - a3) + a4 * (a5 - a6)
+    return res
+
+
+govS2 = []
+for j, i in enumerate(segment):
+    if j == 10:
+        j = 9
+    govS2.append(S(i, j))
+# govS2 = [S2(i, j-1) for j, i in enumerate(segment)]
+govy2 = [solve_dir(i) for i in segment]
+
+plt.plot(segment, govy2)
+plt.plot(segment, govS2)
+plt.legend(['Функция', 'Сплайн'], loc=2)
 plt.show()
