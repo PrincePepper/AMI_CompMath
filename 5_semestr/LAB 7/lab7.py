@@ -86,10 +86,10 @@ for j, i in enumerate(segment):
     if j == 10:
         j = 9
     govS2.append(S(i, j))
-# govS2 = [S2(i, j-1) for j, i in enumerate(segment)]
 govy2 = [solve_dir(i) for i in segment]
 
 plt.plot(segment, govy2)
 plt.plot(segment, govS2)
 plt.legend(['Функция', 'Сплайн'], loc=2)
 plt.show()
+
